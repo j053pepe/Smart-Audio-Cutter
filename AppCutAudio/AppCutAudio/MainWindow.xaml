@@ -1,0 +1,91 @@
+﻿<Window x:Class="AppCutAudio.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
+        xmlns:local="clr-namespace:AppCutAudio"
+        mc:Ignorable="d"
+        Title="App-Cut-Audio" Height="Auto" Width="1280">
+    <Grid Background="#FFF7C1C1" Height="903">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" MinHeight="60"/>
+            <RowDefinition Height="Auto" MinHeight="320"/>            
+            <RowDefinition Height="Auto" MinHeight="46"/>
+            <RowDefinition Height="Auto" MinHeight="46"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!--0-->
+        <Button Grid.Column="0" Name="btnAbrir" Content="Abrir archivo de audio" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Width="142" Click="btnAbrir_Click" Height="40" Background="#FFC8EF49" FontFamily="Segoe Print" FontWeight="Bold"/>
+        <Button Content="Limpiar" Name="btnLimpiar" HorizontalAlignment="Left" Margin="199,0,0,0" VerticalAlignment="Center" Height="40" Width="87" Click="Clear_Click" Background="#FFEFB27D" />
+        <Button Grid.Row="0" x:Name="PlayButton" Content="Play" HorizontalAlignment="Left" Margin="324,25,0,0" VerticalAlignment="Top" Width="75" Click="PlayButton_Click" Background="White"/>
+        <Button x:Name="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="442,25,0,0" VerticalAlignment="Top" Width="75" Click="StopButton_Click" Background="#FF0D0E0D" Foreground="White"/>
+        <!--1-->
+        <Image Grid.Row="1" x:Name="audioImage" Stretch="None" Margin="10,11,16,21" />        
+        <!--2-->
+        <Label Grid.Row="2" Name="lblArtista" Content="Artista" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="0,8,1205,8"/>
+        <TextBox Grid.Row="2" Name="txtArtista" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="80,8,982,8"/>
+        <Label Grid.Row="2" Name="lblAlbum" Content="Album" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="490,8,714,8"/>
+        <TextBox Grid.Row="2" Name="txtAlbum" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="576,8,449,8"/>
+        <Label Grid.Row="2" Name="lblYear" Content="Año" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="975,8,247,8"/>
+        <TextBox Grid.Row="2" Name="txtYear" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="1052,8,10,8"/>
+        <!--3-->
+        <Label Grid.Row="3" Name="lblGenero" Content="Genero" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="0,8,1205,8"/>
+        <TextBox Grid.Row="3" Name="txtGenero" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="80,8,982,8"/>
+        <Label Grid.Row="3" Name="lblComentario" Content="Comentario" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="451,8,713,8"/>
+        <TextBox Grid.Row="3" Name="txtComment" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="577,8,449,8"/>
+        <!--4-->
+        <Button Grid.Row="4" Margin="199,10,201,10" Content="Procesar" Name="btnProcesar" Click="btnProcesar_Click" Background="#FF2184D0" Foreground="White" FontWeight="Bold" FontSize="14" FontFamily="Segoe Print"/>
+        <!--5-->
+        <ListBox Grid.Row="5" Name="lstAudios" HorizontalAlignment="Center" Height="281" Margin="0,50,0,0" VerticalAlignment="Top" Width="1260" ItemsSource="{Binding Path=ListaDeAudios}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <!-- Aquí se muestra la información del archivo -->
+                        <Label Content="Nombre" FontSize="15"/>
+                        <TextBlock Text="{Binding NombreArchivo}" Margin="5" Foreground="DarkBlue"   FontWeight="Bold" FontSize="15"/>
+                        <Label Content="Titulo" FontSize="15"/>
+                        <TextBlock Text="{Binding TagData.Title}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="15"/>
+                        <Label Content="Artista" FontSize="15"/>
+                        <TextBlock Text="{Binding TagData.Artist}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="15"/>
+                        <Label Content="Album" FontSize="15"/>
+                        <TextBlock Text="{Binding TagData.Album}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="15"/>
+                        <Label Content="Año" FontSize="15"/>
+                        <TextBlock Text="{Binding TagData.Year}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="15"/>
+                        <Label Content="Genero" FontSize="15"/>
+                        <TextBlock Text="{Binding TagData.Genre}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="15"/>
+                        <Label Content="Comentario" FontSize="15"/>
+                        <TextBlock Text="{Binding TagData.Comment}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="15"/>
+                        <!-- Botón para reproducir el archivo -->
+                        <Button Content="Play" Click="PlayItemListButton_Click" Tag="{Binding}" Margin="5" Background="LightGreen" FontSize="15"/>
+                        <Button Content="Stop" Click="StopItemListButton_Click" Margin="5" Background="DarkGreen" Foreground="LightPink" FontSize="15"/>
+                        <!-- Botón para editar la información del ID3Tag -->
+                        <Button Content="Editar información" Click="EditItemListButton_Click" Tag="{Binding}" Margin="5" Background="LightBlue" FontSize="15"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <!-- Estilos adicionales para el ListBox -->
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Margin" Value="2"/>
+                </Style>
+            </ListBox.Resources>
+        </ListBox>
+        <Label Content="Resultados" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="5" VerticalAlignment="Top" Height="35" Width="94" FontSize="14" FontWeight="Bold"/>
+
+        <!--BlockUI-->
+        <Grid Background="#AAFFFFFF" Name="overlay" Visibility="Hidden" Grid.RowSpan="6">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar Width="100" Height="20" IsIndeterminate="True"/>
+                <TextBlock Text="Procesando..." HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
