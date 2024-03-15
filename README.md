@@ -1,34 +1,38 @@
 # Smart-Audio-Cutter
 
 ## Descripción
-Smart-Audio-Cutter es una aplicación diseñada para recortar audios de manera automática. Con una interfaz intuitiva, los usuarios pueden agregar archivos de audio y visualizar gráficos generados por un script de Python, facilitando la identificación de las secciones a recortar.
+Smart-Audio-Cutter es una herramienta eficaz para recortar audios automáticamente. Utiliza una interfaz gráfica para cargar audios y mostrar su representación visual, facilitando la edición precisa y rápida.
 
 ## Características
-- **Interfaz Gráfica**: Agrega y visualiza el audio en una interfaz amigable.
-- **Procesamiento Automático**: Detecta silencios y recorta el audio cuando comienza el sonido.
-- **Guardado de Archivos**: Los audios recortados se guardan en formato MP3.
-- **Lista de Reproducción**: Accede a una lista con los audios procesados, con opciones para reproducir, detener y editar metadatos como artista, álbum, año y título.
+- **Interfaz Gráfica Intuitiva**: Carga y visualiza gráficos de audio generados por un script de Python.
+- **Procesamiento Automático de Audio**: Detecta silencios y segmenta el audio en pistas individuales.
+- **Exportación en MP3**: Guarda los segmentos de audio en formato MP3.
+- **Gestión de Metadatos**: Permite editar información como artista, álbum, año y título.
 
 ## Cómo Usar
-1. Agrega un archivo de audio a la aplicación.
-2. Espera a que se genere y cargue el gráfico del audio.
-3. Una vez cargado el gráfico, presiona el botón 'Procesar Audio'.
-4. La aplicación detectará los silencios y creará pistas individuales.
-5. Accede a la lista de audios recortados y gestiona tus archivos.
+1. Carga un archivo de audio en la aplicación.
+2. Visualiza el gráfico del audio generado.
+3. Procesa el audio con el botón correspondiente.
+4. Administra los audios resultantes desde la lista de reproducción.
 
 ## Requisitos
+- .NET Framework 4.8
 - Python 3.x
-- Bibliotecas de Python: [listar las bibliotecas necesarias]
+- Librerías de Python necesarias:
+  - matplotlib
+  - pydub
+  - base64
+  - io
+  - os
 
 ## Instalación
-Instrucciones para instalar y configurar la aplicación.
+Smart-Audio-Cutter es una aplicación WPF. Sigue las instrucciones para configurar el entorno .NET y ejecutar la aplicación.
 
 ## Contribuir
-Información sobre cómo otros desarrolladores pueden contribuir al proyecto.
+Si estás interesado en contribuir al proyecto, por favor revisa las pautas de contribución.
 
 ## Licencia
-Detalles sobre la licencia del software.
+Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
 
 ## Contacto
-Información de contacto para soporte o preguntas.
-
+Si tienes preguntas o necesitas soporte, no dudes en contactar al equipo de desarrollo.
