@@ -1,6 +1,34 @@
 ﻿import sys
 from pydub import AudioSegment, silence
 import os
+import numpy as np
+import soundfile as sf
+from scipy.io.wavfile import write
+
+async def detect_sound_in_audio_file(input_file_path, path_save):
+    data, samplerate = sf.read(input_file_path)
+    is_recording = False
+    track_number = 1
+    output_data = []
+
+    for i in range(0, len(data), samplerate):
+        chunk = data[i:i+samplerate]
+        max_volume = np.max(np.abs(chunk))
+
+        if max_volume > 0.1 and not is_recording:
+            is_recording = True
+
+        if is_recording and max_volume <= 0.1:
+            is_recording = False
+            write(os.path.join(path_save, f'pista_{track_number}.wav'), samplerate, np.array(output_data))
+            output_data = []
+            track_number += 1
+
+        if is_recording:
+            output_data.extend(chunk)
+
+    if len(output_data) > 0:
+        write(os.path.join(path_save, f'pista_{track_number}.wav'), samplerate, np.array(output_data))
 
 def main():
     if len(sys.argv) != 2:
@@ -18,26 +46,7 @@ def main():
     os.makedirs(carpeta_salida, exist_ok=True)
 
     try:
-        # Carga tu archivo de audio
-        myaudio = AudioSegment.from_mp3(ruta_archivo)
-
-        # Detecta los segmentos de silencio
-        silence_segments = silence.detect_silence(myaudio, min_silence_len=1000, silence_thresh=-44)
-
-        for i, (start, stop) in enumerate(silence_segments):
-            print(f"Segmento de silencio {i + 1}: Inicio {start} ms, Fin {stop} ms")
-
-        # Convierte los tiempos de inicio y finalización a segundos
-        silence_segments_in_seconds = [(start / 1000, stop / 1000) for start, stop in silence_segments]
-
-        # Extrae las pistas que están después de cada segmento de silencio
-        for i in range(len(silence_segments_in_seconds) - 1):
-            start = silence_segments_in_seconds[i][1]  # Fin del silencio actual
-            stop = silence_segments_in_seconds[i + 1][0]  # Inicio del siguiente silencio
-            segment = myaudio[int(start * 1000):int(stop * 1000)]
-            ruta_segmento = os.path.join(carpeta_salida, f"pista_{i}.mp3")
-            segment.export(ruta_segmento, format="mp3")
-            print(f"Pista entre silencio {i}: desde {start:.2f} s hasta {stop:.2f} s")
+        detect_sound_in_audio_file(ruta_archivo,)
 
         print("Se acabo")
     except Exception as e:

@@ -24,7 +24,7 @@ def main():
 
         # Crear un gráfico de amplitud (forma de onda) del audio
         samples = audio_file.get_array_of_samples()
-        plt.figure(figsize=(14, 4))  # Ajusta el tamaño de la figura
+        plt.figure(figsize=(20, 6))  # Ajusta el tamaño de la figura
         plt.plot(samples)
         plt.xlabel("Tiempo")
         plt.ylabel("Amplitud")

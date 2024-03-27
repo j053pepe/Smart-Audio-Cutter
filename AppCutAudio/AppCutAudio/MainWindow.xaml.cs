@@ -22,6 +22,7 @@ using AppCutAudio.Helpers;
 using NAudio.Lame;
 using System.Collections.ObjectModel;
 using AppCutAudio.Models;
+using System.Windows.Threading;
 
 namespace AppCutAudio
 {
@@ -35,6 +36,9 @@ namespace AppCutAudio
         private IWavePlayer waveOut;
         private AudioFileReader audioFile;
         private NAudio.Lame.ID3TagData tagData;
+        private readonly DispatcherTimer _timer = new DispatcherTimer();
+        private int _currentImageIndex = 0;
+        private string[] _imagePaths = { "/Images/Home.jpeg", "/Images/Home1.jpeg", "/Images/Home2.jpeg", "/Images/Home3.jpeg" };
         public ObservableCollection<AudioFile> ListaDeAudios { get; set; }
         public MainWindow()
         {
@@ -46,6 +50,12 @@ namespace AppCutAudio
             InputsHideShow(Visibility.Collapsed);
             ListaDeAudios = new ObservableCollection<AudioFile>();
             this.DataContext = this;
+            // Configurar el temporizador para cambiar la imagen cada 30 segundos
+            _timer.Interval = TimeSpan.FromSeconds(30);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
+            // Establecer la primera imagen de fondo
+            SetBackgroundImage(_imagePaths[_currentImageIndex]);
         }
 
         private async void btnAbrir_Click(object sender, RoutedEventArgs e)
@@ -118,7 +128,8 @@ namespace AppCutAudio
             StopButton.Visibility = Visibility.Collapsed;
             btnProcesar.IsEnabled = false;
             string pathSegmentos = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-            Directory.Delete(pathSegmentos, true);
+            if( Directory.Exists(pathSegmentos))
+                Directory.Delete(pathSegmentos, true);
             InputsHideShow(Visibility.Collapsed);
             ListaDeAudios = new ObservableCollection<AudioFile>();
         }
@@ -254,7 +265,25 @@ namespace AppCutAudio
             waveOut.Init(audioFile);
             waveOut.Play();
         }
-
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            // Cambiar la imagen de fondo
+            _currentImageIndex = (_currentImageIndex + 1) % _imagePaths.Length;
+            SetBackgroundImage(_imagePaths[_currentImageIndex]);
+        }
+        private void SetBackgroundImage(string imagePath)
+        {
+            imagePath= $"{AppDomain.CurrentDomain.BaseDirectory}{imagePath}";
+            try
+            {
+                imgBrush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+            }
+            catch (Exception ex)
+            {
+                // Manejar errores al cargar la imagen
+                MessageBox.Show($"Error al cargar la imagen: {ex.Message}");
+            }
+        }
         #endregion
     }
 }

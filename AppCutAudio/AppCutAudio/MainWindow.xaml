@@ -6,11 +6,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
         xmlns:local="clr-namespace:AppCutAudio"
         mc:Ignorable="d"
-        Title="App-Cut-Audio" Height="Auto" Width="1280">
-    <Grid Background="#FFF7C1C1" Height="903">
+        Title="App-CoInAu" Height="Auto" Width="1280" Background="#FFB1C6C1">
+    <Grid Height="903">
+        <Grid.Background>
+            <ImageBrush ImageSource="Images/Home3.jpeg" Stretch="Uniform" x:Name="imgBrush" TileMode="None" Opacity="0.25"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="60"/>
-            <RowDefinition Height="Auto" MinHeight="320"/>            
+            <RowDefinition Height="Auto" MinHeight="39"/>
+            <RowDefinition Height="Auto" MinHeight="110.95"/>
+            <RowDefinition Height="Auto" MinHeight="320"/>
             <RowDefinition Height="Auto" MinHeight="46"/>
             <RowDefinition Height="Auto" MinHeight="46"/>
             <RowDefinition Height="Auto" MinHeight="50"/>
@@ -20,28 +24,38 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <!--0-->
-        <Button Grid.Column="0" Name="btnAbrir" Content="Abrir archivo de audio" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Width="142" Click="btnAbrir_Click" Height="40" Background="#FFC8EF49" FontFamily="Segoe Print" FontWeight="Bold"/>
-        <Button Content="Limpiar" Name="btnLimpiar" HorizontalAlignment="Left" Margin="199,0,0,0" VerticalAlignment="Center" Height="40" Width="87" Click="Clear_Click" Background="#FFEFB27D" />
-        <Button Grid.Row="0" x:Name="PlayButton" Content="Play" HorizontalAlignment="Left" Margin="324,25,0,0" VerticalAlignment="Top" Width="75" Click="PlayButton_Click" Background="White"/>
-        <Button x:Name="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="442,25,0,0" VerticalAlignment="Top" Width="75" Click="StopButton_Click" Background="#FF0D0E0D" Foreground="White"/>
+        <Label Content="Cortador inteligente de audio" FontFamily="Segoe UI Black"  FontSize="22" Foreground="#FF065BCE" FontWeight="Bold" Margin="0,0,0,0" FontStyle="Italic" HorizontalAlignment="Center" Panel.ZIndex="3"/>
         <!--1-->
-        <Image Grid.Row="1" x:Name="audioImage" Stretch="None" Margin="10,11,16,21" />        
+        <Button Grid.Row="1" Name="btnAbrir" Content="Abrir archivo de audio" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Width="142" Click="btnAbrir_Click" Height="40" Background="#FFC8EF49" FontFamily="Segoe Print" FontWeight="Bold"/>
+        <Button Grid.Row="1" Content="Limpiar" Name="btnLimpiar" HorizontalAlignment="Left" Margin="199,0,0,0" VerticalAlignment="Center" Height="40" Width="87" Click="Clear_Click" Background="#FFEFB27D" />
+        <Button Grid.Row="1" x:Name="PlayButton" Content="Play" HorizontalAlignment="Left" Margin="324,25,0,0" VerticalAlignment="Top" Width="75" Click="PlayButton_Click" Background="White" Height="20"/>
+        <Button Grid.Row="1" x:Name="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="442,25,0,0" VerticalAlignment="Top" Width="75" Click="StopButton_Click" Background="#FF0D0E0D" Foreground="White" Height="20"/>
         <!--2-->
-        <Label Grid.Row="2" Name="lblArtista" Content="Artista" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="0,8,1205,8"/>
-        <TextBox Grid.Row="2" Name="txtArtista" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="80,8,982,8"/>
-        <Label Grid.Row="2" Name="lblAlbum" Content="Album" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="490,8,714,8"/>
-        <TextBox Grid.Row="2" Name="txtAlbum" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="576,8,449,8"/>
-        <Label Grid.Row="2" Name="lblYear" Content="Año" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="975,8,247,8"/>
-        <TextBox Grid.Row="2" Name="txtYear" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="1052,8,10,8"/>
+        <ScrollViewer Grid.Row="2" Margin="10,11,16,21"
+              VerticalScrollBarVisibility="Auto"
+              HorizontalScrollBarVisibility="Disabled">
+            <Image x:Name="audioImage">
+                <Image.RenderTransform>
+                    <ScaleTransform ScaleX="1.0" ScaleY="1.0" />
+                </Image.RenderTransform>
+            </Image>
+        </ScrollViewer>
         <!--3-->
-        <Label Grid.Row="3" Name="lblGenero" Content="Genero" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="0,8,1205,8"/>
-        <TextBox Grid.Row="3" Name="txtGenero" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="80,8,982,8"/>
-        <Label Grid.Row="3" Name="lblComentario" Content="Comentario" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="451,8,713,8"/>
-        <TextBox Grid.Row="3" Name="txtComment" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="577,8,449,8"/>
+        <Label Grid.Row="3" Name="lblArtista" Content="Artista" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="0,8,1205,8"/>
+        <TextBox Grid.Row="3" Name="txtArtista" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="80,8,982,8"/>
+        <Label Grid.Row="3" Name="lblAlbum" Content="Album" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="490,8,714,8"/>
+        <TextBox Grid.Row="3" Name="txtAlbum" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="576,8,449,8"/>
+        <Label Grid.Row="3" Name="lblYear" Content="Año" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="975,8,247,8"/>
+        <TextBox Grid.Row="3" Name="txtYear" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="1052,8,10,8"/>
         <!--4-->
-        <Button Grid.Row="4" Margin="199,10,201,10" Content="Procesar" Name="btnProcesar" Click="btnProcesar_Click" Background="#FF2184D0" Foreground="White" FontWeight="Bold" FontSize="14" FontFamily="Segoe Print"/>
+        <Label Grid.Row="4" Name="lblGenero" Content="Genero" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="0,8,1205,8"/>
+        <TextBox Grid.Row="4" Name="txtGenero" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="80,8,982,8"/>
+        <Label Grid.Row="4" Name="lblComentario" Content="Comentario" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="451,8,713,8"/>
+        <TextBox Grid.Row="4" Name="txtComment" FontFamily="Segoe Print" FontSize="13" FontWeight="Bold" Margin="577,8,449,8"/>
         <!--5-->
-        <ListBox Grid.Row="5" Name="lstAudios" HorizontalAlignment="Center" Height="281" Margin="0,50,0,0" VerticalAlignment="Top" Width="1260" ItemsSource="{Binding Path=ListaDeAudios}">
+        <Button Grid.Row="5" Margin="199,10,201,10" Content="Procesar" Name="btnProcesar" Click="btnProcesar_Click" Background="#FF2184D0" Foreground="White" FontWeight="Bold" FontSize="14" FontFamily="Segoe Print"/>
+        <!--6-->
+        <ListBox Grid.Row="6" Name="lstAudios" HorizontalAlignment="Center" Opacity="0.25" Height="281" Margin="0,50,0,0" VerticalAlignment="Top" Width="1260" ItemsSource="{Binding Path=ListaDeAudios}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="10">
@@ -78,10 +92,10 @@
                 </Style>
             </ListBox.Resources>
         </ListBox>
-        <Label Content="Resultados" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="5" VerticalAlignment="Top" Height="35" Width="94" FontSize="14" FontWeight="Bold"/>
+        <Label Content="Resultados" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="6" VerticalAlignment="Top" Height="35" Width="94" FontSize="14" FontWeight="Bold"/>
 
         <!--BlockUI-->
-        <Grid Background="#AAFFFFFF" Name="overlay" Visibility="Hidden" Grid.RowSpan="6">
+        <Grid Background="#AAFFFFFF" Name="overlay" Visibility="Hidden" Grid.RowSpan="7">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar Width="100" Height="20" IsIndeterminate="True"/>
                 <TextBlock Text="Procesando..." HorizontalAlignment="Center"/>
