@@ -23,6 +23,7 @@ using NAudio.Lame;
 using System.Collections.ObjectModel;
 using AppCutAudio.Models;
 using System.Windows.Threading;
+using System.ComponentModel;
 
 namespace AppCutAudio
 {
@@ -164,45 +165,62 @@ namespace AppCutAudio
         #region Helper
         private async Task ShowAudio(Microsoft.Win32.OpenFileDialog openFileDialog)
         {
-            // Obtén la ruta completa al script de Python
             string pythonScriptPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PythonScripts", "AudioGrafic.py");
-
-            // Obtén la ruta del archivo seleccionado
             string filePath = openFileDialog.FileName;
 
-            // Invoca el script de Python con la ruta del archivo como argumento
-            ProcessStartInfo psi = new ProcessStartInfo
+            if (!File.Exists(pythonScriptPath))
             {
-                FileName = "python", // Asegúrate de que "python" esté en tu PATH
-                Arguments = $"\"{pythonScriptPath}\" \"{filePath}\"", // Pasa la ruta del archivo como argumento
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
+                MessageBox.Show("El archivo de script de Python no se encontró.");
+                return;
+            }
 
-            using (Process process = new Process { StartInfo = psi })
+            try
             {
-                try
+                using (Process process = new Process())
                 {
+                    process.StartInfo.FileName = "python";
+                    process.StartInfo.Arguments = $"\"{pythonScriptPath}\" \"{filePath}\"";
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.CreateNoWindow = true;
+
                     process.Start();
                     string output = await process.StandardOutput.ReadToEndAsync();
+
+                    // Verificar si hay errores de salida
+                    if (!string.IsNullOrWhiteSpace(output))
+                    {
+                        MessageBox.Show($"El script de Python produjo la siguiente salida: {output}");
+                    }
+
                     // Haz algo con la salida del script de Python (si es necesario)
                     // Carga la imagen y asígnala al control Image
-                    string url = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "espectrograma.png");
-                    BitmapImage bitmap = new BitmapImage(new Uri(url));
-                    audioImage.Source = bitmap;
-                    //btnProcesar.IsEnabled = true;
+                    string imagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "espectrograma.png");
+                    if (File.Exists(imagePath))
+                    {
+                        BitmapImage bitmap = new BitmapImage(new Uri(imagePath));
+                        audioImage.Source = bitmap;
+                    }
+                    else
+                    {
+                        MessageBox.Show("La imagen generada por el script de Python no se encontró.");
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+            }
+            catch (Win32Exception ex)
+            {
+                MessageBox.Show($"Error al iniciar el proceso de Python: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error inesperado: {ex.Message}");
             }
 
             overlay.Visibility = Visibility.Hidden;
             PlayButton.Visibility = Visibility.Visible;
             StopButton.Visibility = Visibility.Visible;
         }
+
 
         private async Task ProcesarAudio()
         {
