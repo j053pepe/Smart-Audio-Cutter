@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -162,6 +163,18 @@ namespace AppCutAudio.Helpers
                 }
             }
             return true;
+        }
+        public static void SaveMp3WithID3Tag(string inputPath, string outputPath, ID3TagData tagData)
+        {
+            // Utiliza NAudio para manipular el audio
+            using (var reader = new Mp3FileReader(inputPath))
+            {
+                // Guarda el audio en un nuevo archivo con los metadatos ID3
+                using (var writer = new LameMP3FileWriter(outputPath, reader.WaveFormat, LAMEPreset.ABR_128, tagData))
+                {
+                    reader.CopyTo(writer);
+                }
+            }
         }
     }
 }
