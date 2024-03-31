@@ -17,13 +17,6 @@ Smart-Audio-Cutter es una herramienta eficaz para recortar audios automáticamen
 
 ## Requisitos
 - .NET Framework 4.8
-- Python 3.x
-- Librerías de Python necesarias:
-  - matplotlib
-  - pydub
-  - base64
-  - io
-  - os
 
 ## Instalación
 Smart-Audio-Cutter es una aplicación WPF. Sigue las instrucciones para configurar el entorno .NET y ejecutar la aplicación.
