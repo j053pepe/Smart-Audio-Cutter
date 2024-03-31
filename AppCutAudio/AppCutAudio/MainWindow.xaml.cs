@@ -67,7 +67,7 @@ namespace AppCutAudio
             var dialogo = new Vistas.Dialog();
             if (dialogo.ShowDialog() == true)
             {
-                if (ProyectName.ToLower() == "demo")
+                if (dialogo.NombreDelProyecto.ToLower() == "demo")
                 {
                     MessageBox.Show("El nombre Demo esta reservado por el programa, prueba con otro nombre.");
                     btnAbrir_Click(sender, e);
