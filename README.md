@@ -16,7 +16,7 @@ Smart-Audio-Cutter es una herramienta eficaz para recortar audios automáticamen
 4. Administra los audios resultantes desde la lista de reproducción.
 
 ## Requisitos
-- .NET Framework 4.8
+- .NET Core 8
 - Python 3.x
 - Librerías de Python necesarias:
   - matplotlib
