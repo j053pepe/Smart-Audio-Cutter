@@ -1,0 +1,49 @@
+﻿<Window x:Class="AppCutAudio.Vistas.TrackDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppCutAudio.Vistas"
+        mc:Ignorable="d"
+        Title="Detalle de pista" Height="300" Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="35*" />
+            <ColumnDefinition Width="65*" />
+        </Grid.ColumnDefinitions>
+        <!--0-->
+        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Nombre archivo:</Label>
+        <TextBox VerticalAlignment="Center" Name="txtNombreArchivo" Grid.ColumnSpan="2" Margin="122,0,10,0" />
+        <!--1-->
+        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Titulo:</Label>
+        <TextBox Grid.Row="1" VerticalAlignment="Center" Name="txtTitulo" Grid.ColumnSpan="2" Margin="122,0,10,0" />
+        <!--2-->
+        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Artista:</Label>
+        <TextBox Grid.Row="2" VerticalAlignment="Center" Name="txtArtista" Grid.ColumnSpan="2" Margin="122,0,10,0" />
+        <!--3-->
+        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Album:</Label>
+        <TextBox Grid.Row="3" VerticalAlignment="Center" Name="txtAlbum" Grid.ColumnSpan="2" Margin="122,0,10,0" />
+        <!--4-->
+        <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Año:</Label>
+        <TextBox Grid.Row="4" VerticalAlignment="Center" Name="txtYear" TextChanged="txtYear_TextChanged" Grid.ColumnSpan="2" Margin="122,0,10,0" />
+        <!--5-->
+        <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Genero:</Label>
+        <TextBox Grid.Row="5" VerticalAlignment="Center" Name="txtGenero" Grid.ColumnSpan="2" Margin="122,0,10,0" />
+        <!--6-->
+        <Label Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Comentario:</Label>
+        <TextBox Grid.Row="6" VerticalAlignment="Center" Name="txtComentario" Grid.ColumnSpan="2" Margin="122,0,10,0" />
+        <!--7-->
+        <Button Grid.Column="0" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Cancelar" Name="btnCancelar" Click="btnCancelar_Click"/>
+        <Button Grid.Column="1" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Guardar Información" Name="btnGuardarInfo" Click="btnGuardarInfo_Click" />
+    </Grid>
+</Window>

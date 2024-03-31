@@ -1,0 +1,22 @@
+﻿<Window x:Class="AppCutAudio.Vistas.Dialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppCutAudio.Vistas"
+        mc:Ignorable="d"
+        Title="Nombre del Proyecto" Height="200" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Introduce el nombre del proyecto:"/>
+        <TextBox x:Name="NombreDelProyectoTextBox" Grid.Row="1" Margin="0,10,0,13" TextChanged="NombreDelProyectoTextBox_TextChanged"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Aceptar" Width="75" Margin="0,0,10,0" Click="Aceptar_Click"/>
+            <Button Content="Cancelar" Width="75" Click="Cancelar_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
