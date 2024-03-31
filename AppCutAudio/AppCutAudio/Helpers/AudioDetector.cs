@@ -10,6 +10,8 @@ using System.Windows.Media;
 using AppCutAudio.Models;
 using ID3TagData = NAudio.Lame.ID3TagData;
 using System.Collections.ObjectModel;
+using NAudio.Wave.SampleProviders;
+using Spectrogram;
 
 namespace AppCutAudio.Helpers
 {
@@ -73,7 +75,6 @@ namespace AppCutAudio.Helpers
             }
         }
 
-
         private async Task ConvertWavToMp3(string wavFileName, string mp3FileName, ID3TagData iD3)
         {
             using (var reader = new WaveFileReader(wavFileName))
@@ -110,6 +111,22 @@ namespace AppCutAudio.Helpers
             }
 
             return segmentosMp3;
+        }
+
+        public void GenerarEspectrograma(string path, string pathOutputSpectrogram)
+        {
+            (double[] audio, int sampleRate) = ReadWavMonoNormalized(path);
+            var sg = new SpectrogramGenerator(sampleRate, fftSize: 1024, stepSize: 5000, maxFreq: 20000);
+            sg.Add(audio);
+            sg.GetBitmap().Save(pathOutputSpectrogram);
+        }
+
+        public (double[] audio, int sampleRate) ReadWavMonoNormalized(string filePath)
+        {
+            var reader = new NAudio.Wave.AudioFileReader(filePath);
+            var audio = new float[reader.Length];
+            reader.Read(audio, 0, audio.Length);
+            return (Array.ConvertAll(audio, x => (double)x), reader.WaveFormat.SampleRate);
         }
     }
 }

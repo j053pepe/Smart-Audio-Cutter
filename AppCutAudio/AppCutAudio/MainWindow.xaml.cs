@@ -1,7 +1,5 @@
 ﻿using Microsoft.Win32;
 using NAudio.Wave;
-using OxyPlot.Series;
-using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +57,7 @@ namespace AppCutAudio
             _timer.Tick += Timer_Tick;
             _timer.Start();
             // Establecer la primera imagen de fondo
-            SetBackgroundImage(_imagePaths[_currentImageIndex]);            
+            SetBackgroundImage(_imagePaths[_currentImageIndex]);
         }
 
         private async void btnAbrir_Click(object sender, RoutedEventArgs e)
@@ -67,7 +65,7 @@ namespace AppCutAudio
             var dialogo = new Vistas.Dialog();
             if (dialogo.ShowDialog() == true)
             {
-                if (ProyectName.ToLower() == "demo")
+                if (dialogo.NombreDelProyecto.ToLower() == "demo")
                 {
                     MessageBox.Show("El nombre Demo esta reservado por el programa, prueba con otro nombre.");
                     btnAbrir_Click(sender, e);
@@ -175,7 +173,7 @@ namespace AppCutAudio
             // Obtén el elemento seleccionado
             Button playButton = (Button)sender;
             var audio = (AudioFile)playButton.Tag;
-            
+
             // Encuentra el índice del audio en la lista
             int index = ListaDeAudios.IndexOf(audio);
 
@@ -243,15 +241,8 @@ namespace AppCutAudio
         #region Helper
         private async Task ShowAudio(Microsoft.Win32.OpenFileDialog openFileDialog)
         {
-            string pythonScriptPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PythonScripts", "AudioGrafic.py");
             string carpetaProyecto = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProyectName);
             string filePath = openFileDialog.FileName;
-
-            if (!File.Exists(pythonScriptPath))
-            {
-                MessageBox.Show("El archivo de script de Python no se encontró.");
-                return;
-            }
 
             try
             {
@@ -259,48 +250,20 @@ namespace AppCutAudio
                 AudioHelper.CrearDemo(filePath, carpetaProyecto, new TimeSpan(0, 3, 0));
 
                 string[] partes = Directory.GetFiles(carpetaProyecto);
-                List<BitmapImage> images = new List<BitmapImage>();
-                foreach (string parte in partes)
+
+                if (partes.Any())
                 {
-                    using (Process process = new Process())
-                    {
-                        process.StartInfo.FileName = "python";
-                        process.StartInfo.Arguments = $"\"{pythonScriptPath}\" \"{parte}\"";
-                        process.StartInfo.RedirectStandardOutput = true;
-                        process.StartInfo.UseShellExecute = false;
-                        process.StartInfo.CreateNoWindow = true;
-
-                        process.Start();
-                        string output = await process.StandardOutput.ReadToEndAsync();
-
-                        // Verificar si hay errores de salida
-                        if (!string.IsNullOrWhiteSpace(output))
-                        {
-                            MessageBox.Show($"El script de Python produjo la siguiente salida: {output}");
-                        }
-
-                        // Haz algo con la salida del script de Python (si es necesario)
-                        // Carga la imagen y asígnala al control Image
-                        string imagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "espectrograma.png");
-                        if (File.Exists(imagePath))
-                        {
-                            BitmapImage bitmap = new BitmapImage(new Uri(imagePath));
-                            images.Add(bitmap);
-                        }
-                        else
-                        {
-                            MessageBox.Show("La imagen generada por el script de Python no se encontró.");
-                        }
-                    }
                     string finalimage = System.IO.Path.Combine(carpetaProyecto, "finalResult.png");
-                    ImagenHelper.UnirImagenes(images, finalimage);
+
+                    AudioDetector detector = new AudioDetector();
+                    await Task.Run(() =>
+                    {
+                        detector.GenerarEspectrograma(partes[0], finalimage);
+                    });
+
                     BitmapImage finalBitmap = new BitmapImage(new Uri(finalimage));
                     audioImage.Source = finalBitmap;
                 }
-            }
-            catch (Win32Exception ex)
-            {
-                MessageBox.Show($"Error al iniciar el proceso de Python: {ex.Message}");
             }
             catch (Exception ex)
             {
@@ -364,7 +327,7 @@ namespace AppCutAudio
                 Genre = "rock, metal, punk, fussion",
                 Year = "2018"
             };
-            
+
             AudioDetector audioDetector = new AudioDetector();
 
             ObservableCollection<AudioFile> lista = await audioDetector.ConvertirLista(pathSegmentos, tagData);
