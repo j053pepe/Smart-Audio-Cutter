@@ -12,6 +12,8 @@ using ID3TagData = NAudio.Lame.ID3TagData;
 using System.Collections.ObjectModel;
 using NAudio.Wave.SampleProviders;
 using Spectrogram;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace AppCutAudio.Helpers
 {
@@ -115,18 +117,57 @@ namespace AppCutAudio.Helpers
 
         public void GenerarEspectrograma(string path, string pathOutputSpectrogram)
         {
-            (double[] audio, int sampleRate) = ReadWavMonoNormalized(path);
-            var sg = new SpectrogramGenerator(sampleRate, fftSize: 1024, stepSize: 5000, maxFreq: 20000);
-            sg.Add(audio);
-            sg.GetBitmap().Save(pathOutputSpectrogram);
+            try
+            {
+                // Cargar el archivo de audio
+                using (var audioFile = new AudioFileReader(path))
+                {
+                    // Crear un gráfico de amplitud (forma de onda) del audio
+                    var samples = new float[audioFile.Length];
+                    int bytesRead = audioFile.Read(samples, 0, samples.Length);
+
+                    var bmp = new Bitmap(1400, 400); // Ajusta el tamaño de la figura
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        g.Clear(System.Drawing.Color.White);
+                        for (int i = 0; i < samples.Length; i++)
+                        {
+                            int xPixel = (int)Math.Round(i * (double)(bmp.Width - 1) / samples.Length);
+                            int yPixel = (int)Math.Round((1 - samples[i]) * (bmp.Height - 1) / 2);
+                            bmp.SetPixel(xPixel, yPixel, System.Drawing.Color.Blue);
+
+                            // Verificar si hemos llegado al final de las muestras disponibles
+                            if (i == samples.Length - 1)
+                            {
+                                break; // Detener el bucle si no hay más muestras
+                            }
+                        }
+                    }
+
+                    // Guardar el gráfico como una imagen
+                    bmp.Save(pathOutputSpectrogram, ImageFormat.Png);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al generar el Espetrograma");
+            }
         }
 
-        public (double[] audio, int sampleRate) ReadWavMonoNormalized(string filePath)
+
+        (double[] audio, int sampleRate) ReadMono(string filePath, double multiplier = 16_000)
         {
-            var reader = new NAudio.Wave.AudioFileReader(filePath);
-            var audio = new float[reader.Length];
-            reader.Read(audio, 0, audio.Length);
-            return (Array.ConvertAll(audio, x => (double)x), reader.WaveFormat.SampleRate);
+            using var afr = new NAudio.Wave.AudioFileReader(filePath);
+            int sampleRate = afr.WaveFormat.SampleRate;
+            int bytesPerSample = afr.WaveFormat.BitsPerSample / 8;
+            int sampleCount = (int)(afr.Length / bytesPerSample);
+            int channelCount = afr.WaveFormat.Channels;
+            var audio = new List<double>(sampleCount);
+            var buffer = new float[sampleRate * channelCount];
+            int samplesRead = 0;
+            while ((samplesRead = afr.Read(buffer, 0, buffer.Length)) > 0)
+                audio.AddRange(buffer.Take(samplesRead).Select(x => x * multiplier));
+            return (audio.ToArray(), sampleRate);
         }
     }
 }
