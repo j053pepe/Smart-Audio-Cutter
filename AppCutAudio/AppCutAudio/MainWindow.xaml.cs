@@ -40,6 +40,7 @@ namespace AppCutAudio
         private readonly DispatcherTimer _timer = new DispatcherTimer();
         private int _currentImageIndex = 0;
         private string[] _imagePaths = { "/Images/Home.jpeg", "/Images/Home1.jpeg", "/Images/Home2.jpeg", "/Images/Home3.jpeg" };
+        private string ProyectName;
         public ObservableCollection<AudioFile> ListaDeAudios { get; set; }
         public MainWindow()
         {
@@ -61,29 +62,40 @@ namespace AppCutAudio
 
         private async void btnAbrir_Click(object sender, RoutedEventArgs e)
         {
-            string url = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "espectrograma.png");
-            File.Delete(url);
-            btnAbrir.IsEnabled = false;
-            btnLimpiar.IsEnabled = true;
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            openFileDialog.Filter = "Audio files (*.mp3;*.m4a;*.wav)|*.mp3;*.m4a;*.wav|All files (*.*)|*.*";
-            if (openFileDialog.ShowDialog() == true)
+            var dialogo = new Vistas.Dialog();
+            if (dialogo.ShowDialog() == true)
             {
-                using (Mp3FileReader reader = new Mp3FileReader(openFileDialog.FileName))
+                ProyectName = dialogo.NombreDelProyecto;
+                string carpetaProyecto = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProyectName);
+                if (Directory.Exists(carpetaProyecto))
+                    Directory.Delete(carpetaProyecto, true);
+
+                string url = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "espectrograma.png");
+                File.Delete(url);
+
+                btnAbrir.IsEnabled = false;
+                btnLimpiar.IsEnabled = true;
+                Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+                openFileDialog.Filter = "Audio files (*.mp3;*.m4a;*.wav)|*.mp3;*.m4a;*.wav|All files (*.*)|*.*";
+                if (openFileDialog.ShowDialog() == true)
                 {
-                    TimeSpan duration = reader.TotalTime;
-                    if (duration.TotalMinutes > 3)
+                    Mp3FileReader mp3FileReader = new(openFileDialog.FileName);
+                    using (Mp3FileReader reader = mp3FileReader)
                     {
-                        btnProcesar.IsEnabled = true;
-                        overlay.Visibility = Visibility.Visible;
-                        pathAudio = openFileDialog.FileName;
-                        fileName = openFileDialog.SafeFileName;
-                        await ShowAudio(openFileDialog);
-                        InputsHideShow(Visibility.Visible);
-                    }
-                    else
-                    {
-                        MessageBox.Show("El archivo de audio seleccionado tiene menos de 3 minutos de duración.");
+                        TimeSpan duration = reader.TotalTime;
+                        if (duration.TotalMinutes > 3)
+                        {
+                            btnProcesar.IsEnabled = true;
+                            overlay.Visibility = Visibility.Visible;
+                            pathAudio = openFileDialog.FileName;
+                            fileName = openFileDialog.SafeFileName;
+                            await ShowAudio(openFileDialog);
+                            InputsHideShow(Visibility.Visible);
+                        }
+                        else
+                        {
+                            MessageBox.Show("El archivo de audio seleccionado tiene menos de 3 minutos de duración.");
+                        }
                     }
                 }
             }
@@ -100,7 +112,7 @@ namespace AppCutAudio
                 Year = txtYear.Text
             };
             string pathSegmentos = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-            if(Directory.Exists(pathSegmentos))
+            if (Directory.Exists(pathSegmentos))
                 Directory.Delete(pathSegmentos, true);
             Directory.CreateDirectory(pathSegmentos);
 
@@ -129,7 +141,7 @@ namespace AppCutAudio
             StopButton.Visibility = Visibility.Collapsed;
             btnProcesar.IsEnabled = false;
             string pathSegmentos = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-            if( Directory.Exists(pathSegmentos))
+            if (Directory.Exists(pathSegmentos))
                 Directory.Delete(pathSegmentos, true);
             InputsHideShow(Visibility.Collapsed);
             ListaDeAudios = new ObservableCollection<AudioFile>();
@@ -147,7 +159,7 @@ namespace AppCutAudio
 
         private void EditItemListButton_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void PlayItemListButton_Click(object sender, RoutedEventArgs e)
@@ -166,6 +178,7 @@ namespace AppCutAudio
         private async Task ShowAudio(Microsoft.Win32.OpenFileDialog openFileDialog)
         {
             string pythonScriptPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PythonScripts", "AudioGrafic.py");
+            string carpetaProyecto = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProyectName);
             string filePath = openFileDialog.FileName;
 
             if (!File.Exists(pythonScriptPath))
@@ -176,35 +189,47 @@ namespace AppCutAudio
 
             try
             {
-                using (Process process = new Process())
+                //AudioHelper.DividirAudio(filePath, carpetaProyecto, new TimeSpan(0, 30, 0));
+                AudioHelper.CrearDemo(filePath, carpetaProyecto, new TimeSpan(0, 3, 0));
+
+                string[] partes = Directory.GetFiles(carpetaProyecto);
+                List<BitmapImage> images = new List<BitmapImage>();
+                foreach (string parte in partes)
                 {
-                    process.StartInfo.FileName = "python";
-                    process.StartInfo.Arguments = $"\"{pythonScriptPath}\" \"{filePath}\"";
-                    process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = true;
-
-                    process.Start();
-                    string output = await process.StandardOutput.ReadToEndAsync();
-
-                    // Verificar si hay errores de salida
-                    if (!string.IsNullOrWhiteSpace(output))
+                    using (Process process = new Process())
                     {
-                        MessageBox.Show($"El script de Python produjo la siguiente salida: {output}");
-                    }
+                        process.StartInfo.FileName = "python";
+                        process.StartInfo.Arguments = $"\"{pythonScriptPath}\" \"{parte}\"";
+                        process.StartInfo.RedirectStandardOutput = true;
+                        process.StartInfo.UseShellExecute = false;
+                        process.StartInfo.CreateNoWindow = true;
 
-                    // Haz algo con la salida del script de Python (si es necesario)
-                    // Carga la imagen y asígnala al control Image
-                    string imagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "espectrograma.png");
-                    if (File.Exists(imagePath))
-                    {
-                        BitmapImage bitmap = new BitmapImage(new Uri(imagePath));
-                        audioImage.Source = bitmap;
+                        process.Start();
+                        string output = await process.StandardOutput.ReadToEndAsync();
+
+                        // Verificar si hay errores de salida
+                        if (!string.IsNullOrWhiteSpace(output))
+                        {
+                            MessageBox.Show($"El script de Python produjo la siguiente salida: {output}");
+                        }
+
+                        // Haz algo con la salida del script de Python (si es necesario)
+                        // Carga la imagen y asígnala al control Image
+                        string imagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "espectrograma.png");
+                        if (File.Exists(imagePath))
+                        {
+                            BitmapImage bitmap = new BitmapImage(new Uri(imagePath));
+                            images.Add(bitmap);
+                        }
+                        else
+                        {
+                            MessageBox.Show("La imagen generada por el script de Python no se encontró.");
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("La imagen generada por el script de Python no se encontró.");
-                    }
+                    string finalimage = System.IO.Path.Combine(carpetaProyecto, "finalResult.png");
+                    ImagenHelper.UnirImagenes(images, finalimage);
+                    BitmapImage finalBitmap = new BitmapImage(new Uri(finalimage));
+                    audioImage.Source = finalBitmap;
                 }
             }
             catch (Win32Exception ex)
@@ -291,7 +316,7 @@ namespace AppCutAudio
         }
         private void SetBackgroundImage(string imagePath)
         {
-            imagePath= $"{AppDomain.CurrentDomain.BaseDirectory}{imagePath}";
+            imagePath = $"{AppDomain.CurrentDomain.BaseDirectory}{imagePath}";
             try
             {
                 imgBrush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Relative));

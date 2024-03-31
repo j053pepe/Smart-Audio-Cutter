@@ -5,8 +5,7 @@ from pydub import AudioSegment
 import base64
 from io import BytesIO
 import os
-
-logging.basicConfig(level=logging.DEBUG)
+#import pdb; pdb.set_trace()
 
 def main():
     if len(sys.argv) != 2:
@@ -30,17 +29,17 @@ def main():
         samples = audio_file.get_array_of_samples()
         logging.info("Obtenidas las muestras del audio.")
 
-        plt.figure(figsize=(60, 10))  # Ajusta el tamaño de la figura
+        plt.figure(figsize=(14, 4))  # Ajusta el tamaño de la figura
         plt.plot(samples)
         plt.xlabel("Tiempo")
         plt.ylabel("Amplitud")
-        plt.title(f"Forma de onda del audio {nombre_archivoRecibido}")
+        plt.title(f"Primeros 3 minutos con audio (no se toma el silencio)")
         plt.grid(True)
         logging.info("Gráfico creado correctamente.")
 
         # Guardar el gráfico como una imagen
         plt.savefig("espectrograma.png")
-        logging.info("Gráfico guardado como espectrograma.png")
+        #logging.info("Gráfico guardado como espectrograma.png")
     except MemoryError as mem_err:
         logging.error(f"Error de memoria: {mem_err}")
     except Exception as e:
