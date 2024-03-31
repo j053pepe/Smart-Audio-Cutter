@@ -13,7 +13,8 @@ Smart-Audio-Cutter es una herramienta eficaz para recortar audios automáticamen
 1. Carga un archivo de audio en la aplicación.
 2. Visualiza el gráfico del audio generado.
 3. Procesa el audio con el botón correspondiente.
-4. Administra los audios resultantes desde la lista de reproducción.
+   ![Ejemplo de espectrograma](https://github.com/j053pepe/Smart-Audio-Cutter/blob/NetCore8/WithPythonSpectrogram/AppCutAudio/AppCutAudio/Demo/finalResult.png?raw=true)
+5. Administra los audios resultantes desde la lista de reproducción.
 
 ## Requisitos
 - .NET Core 8
