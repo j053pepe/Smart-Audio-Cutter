@@ -62,33 +62,35 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="10">
                         <!-- Aquí se muestra la información del archivo -->
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Margin="2">
                             <Label Content="Nombre" FontSize="12"/>
-                            <TextBlock Text="{Binding NombreArchivo}" Margin="5" Foreground="DarkBlue"   FontWeight="Bold" FontSize="12"/>
+                            <TextBlock Text="{Binding NombreArchivo}" Margin="2" Foreground="DarkBlue"   FontWeight="Bold" FontSize="12"/>
                             <Label Content="Titulo" FontSize="12"/>
-                            <TextBlock Text="{Binding Title}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
+                            <TextBlock Text="{Binding Title}" Margin="2" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical">
-                        <Label Content="Artista" FontSize="12"/>
-                        <TextBlock Text="{Binding Artist}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
-                        <Label Content="Album" FontSize="12"/>
-                        <TextBlock Text="{Binding Album}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
+                        <StackPanel Orientation="Vertical" Margin="2">
+                            <Label Content="Artista" FontSize="12"/>
+                            <TextBlock Text="{Binding Artist}" Margin="2" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
+                            <Label Content="Album" FontSize="12"/>
+                            <TextBlock Text="{Binding Album}" Margin="2" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Margin="2">
                             <Label Content="Año" FontSize="12"/>
-                            <TextBlock Text="{Binding Year}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
+                            <TextBlock Text="{Binding Year}" Margin="2" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
                             <Label Content="Genero" FontSize="12"/>
-                            <TextBlock Text="{Binding Genre}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
+                            <TextBlock Text="{Binding Genre}" Margin="2" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Margin="2">
                             <Label Content="Comentario" FontSize="12"/>
-                            <TextBlock Text="{Binding Comment}" Margin="5" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
-                            <!-- Botón para reproducir el archivo -->
-                            <Button Content="Play" Click="PlayItemListButton_Click" Tag="{Binding}" Margin="5" Background="LightGreen" FontSize="12"/>
-                            <Button Content="Stop" Click="StopItemListButton_Click" Margin="5" Background="DarkGreen" Foreground="LightPink" FontSize="12"/>                            
+                            <TextBlock Text="{Binding Comment}" Margin="2" Foreground="DarkSlateBlue" FontWeight="Bold" FontSize="12"/>
                         </StackPanel>
-                        <!-- Botón para editar la información del ID3Tag -->
-                        <Button Content="Editar información" Click="EditItemListButton_Click" Tag="{Binding}" Margin="5" Background="LightBlue" FontSize="12"/>
+                        <StackPanel Orientation="Vertical" Margin="2">
+                            <!-- Botón para reproducir el archivo -->
+                            <Button Content="Play" Click="PlayItemListButton_Click" Tag="{Binding}" Margin="2" Background="LightGreen" FontSize="12" Height="30"/>
+                            <Button Content="Stop" Click="StopItemListButton_Click" Margin="2" Background="DarkGreen" Foreground="LightPink" FontSize="12" Height="30"/>
+                            <!-- Botón para editar la información del ID3Tag -->
+                            <Button Content="Editar información" Click="EditItemListButton_Click" Tag="{Binding}" Margin="2" Background="LightBlue" FontSize="12" Height="30"/>
+                        </StackPanel>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -97,7 +99,7 @@
                 <Style TargetType="ListBoxItem">
                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
                     <Setter Property="BorderBrush" Value="Gray"/>
-                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Padding" Value="2"/>
                     <Setter Property="Margin" Value="2"/>
                     <Style.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
