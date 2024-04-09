@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
         xmlns:local="clr-namespace:AppCutAudio"
         mc:Ignorable="d"
-        Title="App-CoInAu" Height="Auto" Width="1280" Background="#FFB1C6C1" ResizeMode="NoResize">
-    <Grid Height="920">
+        Title="App-CoInAu" Height="980" Width="1280" ResizeMode="NoResize" Opacity="1">
+    <Window.Background>
+        <ImageBrush x:Name="imgBrush" ImageSource="/Home.jpeg" Opacity="0.5"/>
+    </Window.Background>
+    <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="Images/Home3.jpeg" Stretch="Uniform" x:Name="imgBrush" TileMode="None" Opacity="0.25"/>
+            <SolidColorBrush Color="#FFF9FFF1" Opacity="0.5"/>
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" MinHeight="39"/>

@@ -157,6 +157,7 @@
     <None Include="Demo\finalResult.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Resource Include="Home.jpeg" />
     <Content Include="Images\Home.jpeg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
